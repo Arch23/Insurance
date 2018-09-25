@@ -1,0 +1,126 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema tcs
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema tcs
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `tcs` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `tcs` ;
+
+-- -----------------------------------------------------
+-- Table `tcs`.`Pessoa`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tcs`.`Pessoa` (
+  `IdPessoa` INT NOT NULL COMMENT '',
+  `Nome` VARCHAR(45) NULL COMMENT '',
+  `Fone` VARCHAR(45) NULL COMMENT '',
+  `Endereco` VARCHAR(45) NULL COMMENT '',
+  `Bairro` VARCHAR(45) NULL COMMENT '',
+  `Cep` VARCHAR(15) NULL COMMENT '',
+  PRIMARY KEY (`IdPessoa`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tcs`.`Cliente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tcs`.`Cliente` (
+  `IdCliente` INT NOT NULL COMMENT '',
+  `Cpf` VARCHAR(11) NOT NULL COMMENT '',
+  `Rg` VARCHAR(45) NULL COMMENT '',
+  `Sexo` VARCHAR(1) NULL COMMENT '',
+  `DataNascimento` DATE NULL COMMENT '',
+  PRIMARY KEY (`IdCliente`)  COMMENT '',
+  CONSTRAINT `fk_Cliente_Pessoa`
+    FOREIGN KEY (`IdCliente`)
+    REFERENCES `tcs`.`Pessoa` (`IdPessoa`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tcs`.`Marca`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tcs`.`Marca` (
+  `IdMarca` INT NOT NULL COMMENT '',
+  `Descricao` VARCHAR(45) NULL COMMENT '',
+  PRIMARY KEY (`IdMarca`)  COMMENT '')
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tcs`.`Modelo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tcs`.`Modelo` (
+  `IdModelo` INT NOT NULL COMMENT '',
+  `IdMarca` INT NOT NULL COMMENT '',
+  `Descricao` VARCHAR(45) NULL COMMENT '',
+  PRIMARY KEY (`IdModelo`)  COMMENT '',
+  INDEX `fk_Modelo_Marca1_idx` (`IdMarca` ASC)  COMMENT '',
+  CONSTRAINT `fk_Modelo_Marca1`
+    FOREIGN KEY (`IdMarca`)
+    REFERENCES `tcs`.`Marca` (`IdMarca`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tcs`.`Veiculo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tcs`.`Veiculo` (
+  `IdVeiculo` INT NOT NULL COMMENT '',
+  `IdModelo` INT NOT NULL COMMENT '',
+  `Placa` VARCHAR(45) NULL COMMENT '',
+  `Ano` INT NULL COMMENT '',
+  PRIMARY KEY (`IdVeiculo`)  COMMENT '',
+  INDEX `fk_Veiculo_Modelo1_idx` (`IdModelo` ASC)  COMMENT '',
+  CONSTRAINT `fk_Veiculo_Modelo1`
+    FOREIGN KEY (`IdModelo`)
+    REFERENCES `tcs`.`Modelo` (`IdModelo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = '			';
+
+
+-- -----------------------------------------------------
+-- Table `tcs`.`Apolice`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tcs`.`Apolice` (
+  `IdApolice` INT NOT NULL COMMENT '',
+  `IdCliente` INT NOT NULL COMMENT '',
+  `IdVeiculo` INT NOT NULL COMMENT '',
+  `NumeroApolice` VARCHAR(45) NULL COMMENT '',
+  `DataInicio` DATE NULL COMMENT '',
+  `DataFim` DATE NULL COMMENT '',
+  `Valor` DOUBLE NULL COMMENT '',
+  `Franquia` DOUBLE NULL COMMENT '',
+  `DataContrato` DATE NULL COMMENT '',
+  PRIMARY KEY (`IdApolice`)  COMMENT '',
+  INDEX `fk_Apolice_Cliente1_idx` (`IdCliente` ASC)  COMMENT '',
+  INDEX `fk_Apolice_Veiculo1_idx` (`IdVeiculo` ASC)  COMMENT '',
+  CONSTRAINT `fk_Apolice_Cliente1`
+    FOREIGN KEY (`IdCliente`)
+    REFERENCES `tcs`.`Cliente` (`IdCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Apolice_Veiculo1`
+    FOREIGN KEY (`IdVeiculo`)
+    REFERENCES `tcs`.`Veiculo` (`IdVeiculo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

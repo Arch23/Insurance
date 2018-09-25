@@ -1,0 +1,3 @@
+﻿.radio-group label:not(:last-child){
+    margin-right: 20px;
+}

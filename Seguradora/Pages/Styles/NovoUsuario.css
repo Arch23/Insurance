@@ -1,0 +1,63 @@
+﻿.novo-form {
+    padding: 30px 20px 10px 20px;
+    width: 40%;
+    margin: 200px auto 0 auto;
+    background-color: #FFF;
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: [label-begin] 1fr [label-end] 1fr [field-mid] 1fr [field-end];
+    grid-row-gap: 30px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.form-label{
+    grid-column-start: label-begin;
+    grid-column-end: label-end;
+}
+
+.form-textfield{
+    grid-column-start: label-end;
+    grid-column-end: field-end;
+}
+
+.btn-voltar{
+    grid-column-start: label-begin;
+    grid-column-end: label-end;
+}
+
+.btn-registrar {
+    grid-column-start: field-mid;
+    grid-column-end: field-end;
+}
+
+@media screen and (max-width: 600px){
+    .novo-form{
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        border-radius: 0;
+        grid-template-columns: 1fr;
+
+
+    }
+
+    .form-label {
+        grid-column-start: -1;
+        grid-column-end: 1;
+    }
+
+    .form-textfield {
+        grid-column-start: -1;
+        grid-column-end: 1;
+    }
+
+    .btn-voltar {
+        grid-column-start: -1;
+        grid-column-end: 1;
+    }
+
+    .btn-registrar {
+        grid-column-start: -1;
+        grid-column-end: 1;
+    }
+}

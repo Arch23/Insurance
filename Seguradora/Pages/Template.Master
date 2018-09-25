@@ -1,0 +1,86 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Template.master.cs" Inherits="Seguradora.Pages.Template" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Seguradora</title>
+    <link href="Styles/comum.css" rel="stylesheet" />
+    <link href="Styles/Template.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" />
+    <script src="Js/Template.js"></script>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="template-form">
+            <header>
+                <div class="logo" id="main-logo">
+                    <div class="outer-logo"></div>
+                    <div class="middle-logo"></div>
+                    <div class="inner-logo"></div>
+                </div>
+                <nav>
+                    <div class="dropdown-holder">
+                        <a href="RegCliente.aspx">Cliente</a>
+                        <%--<div class="dropdown-menu">
+                            <a href="#">Cadastrar</a>
+                            <a href="#">Listar</a>
+                        </div>--%>
+                    </div>
+
+                    <div class="dropdown-holder">
+                        <a href="RegApolice.aspx">Apólice</a>
+                        <%--<div class="dropdown-menu">
+                            <a href="#">Cadastrar</a>
+                            <a href="#">Listar</a>
+                        </div>--%>
+                    </div>
+
+                    <div class="dropdown-holder">
+                        <a href="RegVeiculo.aspx">Veículo</a>
+                        <%--<div class="dropdown-menu">
+                            <a href="#">Cadastrar</a>
+                            <a href="#">Listar</a>
+                        </div>--%>
+                    </div>
+
+                    <div class="dropdown-holder">
+                        <a href="RegModelo.aspx">Modelo</a>
+                        <%--<div class="dropdown-menu">
+                            <a href="#">Cadastrar</a>
+                            <a href="#">Listar</a>
+                        </div>--%>
+                    </div>
+
+                    <div class="dropdown-holder">
+                        <a href="RegMarca.aspx">Marca</a>
+                        <%--<div class="dropdown-menu">
+                            <a href="#">Cadastrar</a>
+                            <a href="#">Listar</a>
+                        </div>--%>
+                    </div>
+                </nav>
+                <div id="right-group">
+                    <asp:Button ID="btnSair" runat="server" Text="Sair" CssClass="btn-borderless" OnClick="btnSair_Click" />
+                </div>
+            </header>
+            <div class="content">
+                <div class="form-box">
+                    <div class="form-box-header">                        
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </div>
+                    <div class="form-box-body">
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

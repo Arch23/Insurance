@@ -1,0 +1,173 @@
+﻿.template-form {
+    width: 100%;
+    height: 100%;
+}
+
+header {
+    width: 100%;
+    height: 60px;
+    background-color: #FFF;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+    header nav {
+        display: inline-block;
+        vertical-align: top;
+        line-height: 60px;
+    }
+        header nav div{
+            display: inline-block;
+        }
+
+        header nav a {
+            text-decoration: none;
+            color: #000;
+            text-transform: uppercase;
+            transition: color 100ms ease-in-out, border 100ms ease-in-out;
+            padding-bottom: 20px;
+            border: 2px solid transparent;
+        }
+
+            header nav a:not(:last-child) {
+                margin-right: 20px;
+            }
+
+            header nav a:hover {
+                color: #2196F3;
+                border-bottom: 2px solid #2196F3;
+            }
+
+#right-group {
+    float: right;
+    display: inline-block;
+    height: 100%;
+}
+
+.btn-borderless {
+    background-color: transparent;
+    color: #000;
+    text-transform: uppercase;
+    height: 100%;
+    margin-right: 20px;
+    font-size: 1em;
+    border: 2px solid transparent;
+    transition: color 100ms ease-in-out, border 100ms ease-in-out;
+}
+
+    .btn-borderless:hover {
+        color: #2196F3;
+        border-bottom: 2px solid #2196F3;
+    }
+
+.logo {
+    height: 40px;
+    width: 40px;
+    position: relative;
+    margin: 10px 20px 10px 20px;
+    display: inline-block;
+}
+
+.outer-logo {
+    height: 100%;
+    width: 100%;
+    background-color: #2196F3;
+    border-radius: 15px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%) rotate(45deg);
+}
+
+.middle-logo {
+    background-color: #5E35B1;
+    height: 75%;
+    width: 75%;
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.inner-logo {
+    position: absolute;
+    height: 50%;
+    width: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 2px;
+    background-color: #FFF;
+}
+
+.dropdown-holder{
+    position: relative;
+}
+
+    .dropdown-holder:hover .dropdown-menu {
+        display: inline-block;
+        visibility: visible;
+        opacity: 1;
+    }
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: translateY(101%);
+    background-color: #FFF;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    padding: 7px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 500ms linear;
+}
+
+    .dropdown-menu a {
+        border: none;
+        text-transform: capitalize;
+    }
+
+.dropdown-menu a:hover{
+    border: none;
+}
+
+.content{
+    width: 100%;
+}
+
+.form-box {
+    width: 60%;
+    background-color: #FFF;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    margin: 30px auto 0 auto;
+    border-radius: 5px;
+}
+
+.form-box-header {
+    width: 100%;
+    background-color: #2196F3;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 30px 20px 10px 20px;
+    font-size: 2em;
+    font-weight: 300;
+    color: #FFF;
+}
+
+.form-box-body {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 20px 20px;
+}
+
+@media screen and (max-width: 600px) {
+    header nav {
+        
+    }
+
+    header nav > div {
+        
+    }
+}
