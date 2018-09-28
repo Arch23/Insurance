@@ -55,11 +55,13 @@ namespace Seguradora.Models
         public Veiculo AVeiculo
         {
             get { return aVeiculo; }
+            set { aVeiculo = value; }
         }
 
         public Cliente ACliente
         {
             get { return aCliente; }
+            set { aCliente = value; }
         }
 
 
@@ -114,6 +116,9 @@ namespace Seguradora.Models
             if (retorno.Length != 0)
                 return retorno;
 
+            if(ValidarIdExistente())
+                return "Id de apolice já utilizada\r\n";
+
             string cmdInserir = $"INSERT INTO apolice(IdApolice, IdCliente, IdVeiculo, NumeroApolice, DataInicio, DataFim, Valor, Franquia, DataContrato) " +
                 $"VALUES({IdApolice}, {aCliente.IdPessoa}, {aVeiculo.IdVeiculo}, '{numeroApolice}', '{DataInicio.ToString(FORMATO_DATA)}', '{dataFim.ToString(FORMATO_DATA)}', {valor.ToString(CultureInfo.InvariantCulture)}, {franquia.ToString(CultureInfo.InvariantCulture)}, '{DataContrato.ToString(FORMATO_DATA)}');";
 
@@ -123,10 +128,12 @@ namespace Seguradora.Models
         public string Alterar()
         {
             string retorno = Validar();
-
-
+            
             if (retorno.Length != 0)
                 return retorno;
+
+            if (!ValidarIdExistente())
+                return "Apólice com este ID não existe.\r\n";
 
             string cmdAlterar = $"UPDATE apolice SET IdCliente={aCliente.IdPessoa}, IdVeiculo={aVeiculo.IdVeiculo}, NumeroApolice='{numeroApolice}', DataInicio='{DataInicio.ToString(FORMATO_DATA)}', DataFim='{dataFim.ToString(FORMATO_DATA)}', Valor={valor.ToString(CultureInfo.InvariantCulture)}, Franquia={franquia.ToString(CultureInfo.InvariantCulture)}, DataContrato='{DataContrato.ToString(FORMATO_DATA)}' " +
                 $"WHERE IdApolice={idApolice};";
@@ -140,6 +147,9 @@ namespace Seguradora.Models
 
             if (retorno.Length != 0)
                 return retorno;
+            
+            if (!ValidarIdExistente())
+                return "Apólice com este ID não existe.\r\n";
 
             string cmdExluir = $"DELETE FROM apolice WHERE IdApolice={idApolice};";
 
@@ -152,6 +162,9 @@ namespace Seguradora.Models
 
             if (retorno.Length != 0)
                 return retorno;
+            
+            if (!ValidarIdExistente())
+                return "Apólice com este ID não existe.\r\n";
 
             string cmdRecuperar = $"SELECT * FROM apolice WHERE IdApolice={idApolice}";
 
@@ -175,10 +188,6 @@ namespace Seguradora.Models
                 aVeiculo = new Veiculo(Convert.ToInt32(linha["IdVeiculo"]));
 
                 retorno = "";
-            }
-            else
-            {
-                retorno = "Nenhuma entrada encontrada. ";
             }
 
             return retorno;
@@ -209,6 +218,15 @@ namespace Seguradora.Models
         }
         #endregion
 
+        private bool ValidarIdExistente()
+        {
+            string retorno;
+            string cmdSelectId = $"SELECT idApolice FROM apolice WHERE idApolice={IdApolice}";
+            DataTable tabela = ConexaoBD.GetInstance().ExecutarQuery(cmdSelectId, out retorno);
+
+            return tabela.Rows.Count != 0;
+        }
+
         private string Validar()
         {
             string retorno = Utils.ValidarId(idApolice, "apólice");
@@ -216,16 +234,54 @@ namespace Seguradora.Models
             if (numeroApolice.Length == 0)
                 retorno += "Número da apólice não pode ser vazio.\r\n";
 
+            if (numeroApolice.Length > 45)
+                retorno += "Número da apólice maior que o limite de 45 caracteres.\r\n";
+
             if (valor < 0)
                 retorno += "Valor não pode ser negativo.\r\n";
 
             if (franquia < 0)
                 retorno += "Franquia não pode ser negativa.\r\n";
 
+            if (franquia > valor)
+                retorno += "Valor da franquia não pode ser maior que o valor da apólice.\r\n";
+
             if (dataFim < dataInicio)
                 retorno += "Data de fim menor que a data de início.\r\n";
 
+            if (dataContrato > DateTime.Now)
+                retorno += "Data do contrato maior que a data de hoje.\r\n";
+
+            retorno += ValidarVeiculoCliente();
+
             return retorno;
+        }
+
+        private string ValidarVeiculoCliente()
+        {
+            string retorno = "";
+            string auxRetorno = "";
+            string cmdSelectVeiculo = $"SELECT idVeiculo FROM veiculo WHERE idVeiculo={aVeiculo.IdVeiculo};";
+
+            DataTable tabela = ConexaoBD.GetInstance().ExecutarQuery(cmdSelectVeiculo, out retorno);
+
+            if (retorno.Length != 0)
+                return retorno;
+
+            if (tabela.Rows.Count == 0)
+                auxRetorno += "Id de veiculo não cadastrado!\r\n";
+
+            string cmdSelectCliente = $"SELECT idCliente FROM cliente WHERE idCliente={aCliente.IdPessoa};";
+
+            tabela = ConexaoBD.GetInstance().ExecutarQuery(cmdSelectCliente, out retorno);
+
+            if (retorno.Length != 0)
+                return retorno;
+
+            if (tabela.Rows.Count == 0)
+                auxRetorno += "Id de Cliente não cadastrado!\r\n";
+
+            return auxRetorno;
         }
     }
 }

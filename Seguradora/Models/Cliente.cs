@@ -73,6 +73,9 @@ namespace Seguradora.Models
             if (retorno.Length != 0)
                 return retorno;
 
+            if (ValidarIdExistente())
+                return "Id de cliente já utilizada\r\n";
+
             retorno = base.Inserir();
 
             if (retorno.Length != 0)
@@ -90,6 +93,9 @@ namespace Seguradora.Models
 
             if (retorno.Length != 0)
                 return retorno;
+
+            if (!ValidarIdExistente())
+                return "Cliente com este ID não existe.\r\n";
 
             retorno = base.Alterar();
 
@@ -109,6 +115,9 @@ namespace Seguradora.Models
             if (retorno.Length != 0)
                 return retorno;
 
+            if (!ValidarIdExistente())
+                return "Cliente com este ID não existe.\r\n";
+
             string cmdExcluir = $"DELETE FROM cliente WHERE IdCliente={IdPessoa};";
 
             retorno = ConexaoBD.GetInstance().ExecutarSql(cmdExcluir);
@@ -125,6 +134,9 @@ namespace Seguradora.Models
 
             if (retorno.Length != 0)
                 return retorno;
+
+            if (!ValidarIdExistente())
+                return "Cliente com este ID não existe.\r\n";
 
             retorno = base.Recuperar();
 
@@ -146,10 +158,6 @@ namespace Seguradora.Models
                 sexo = linha["Sexo"].ToString();
                 dataNascimento = Convert.ToDateTime(linha["DataNascimento"]);
                 retorno = "";
-            }
-            else
-            {
-                retorno = "Nenhuma entrada encontrada. ";
             }
 
             return retorno;
@@ -176,18 +184,33 @@ namespace Seguradora.Models
         }
         #endregion
 
+        private bool ValidarIdExistente()
+        {
+            string retorno;
+            string cmdSelectId = $"SELECT IdCliente FROM cliente WHERE idCliente={IdPessoa}";
+            DataTable tabela = ConexaoBD.GetInstance().ExecutarQuery(cmdSelectId, out retorno);
+
+            return tabela.Rows.Count != 0;
+        }
+
         private string Validar()
         {
             string retorno = Utils.ValidarId(IdPessoa, "cliente");
 
             if (cpf.Length == 0)
-                retorno += "cpf não pode ser vazio.\r\n";
+                retorno += "Cpf não pode ser vazio.\r\n";
+            if (cpf.Length > 11)
+                retorno += "Cpf maior que o limite de 11 caracteres.\r\n";
 
             if (rg.Length == 0)
-                retorno += "rg não pode ser vazio.\r\n";
+                retorno += "Rg não pode ser vazio.\r\n";
+            if (rg.Length > 45)
+                retorno += "Rg maior que o limite de 45 caracteres.\r\n";
 
             if (sexo.Length == 0)
-                retorno += "sexo não pode ser vazio.\r\n";
+                retorno += "Sexo não pode ser vazio.\r\n";
+            if (sexo.Length > 1)
+                retorno += "Sexo maior que o limite de 1 carácter.\r\n";
 
             return retorno;
         }

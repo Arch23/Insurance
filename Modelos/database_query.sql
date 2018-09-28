@@ -2,8 +2,11 @@
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Schema tcs
 -- -----------------------------------------------------
@@ -12,25 +15,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- Schema tcs
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `tcs` DEFAULT CHARACTER SET utf8 ;
--- -----------------------------------------------------
--- Schema tcs
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema tcs
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `tcs` DEFAULT CHARACTER SET utf8 ;
-USE `tcs` ;
-
--- -----------------------------------------------------
--- Table `tcs`.`usuario`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tcs`.`usuario` (
-  `login` VARCHAR(45) NOT NULL,
-  `senha` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`login`))
-ENGINE = InnoDB;
-
 USE `tcs` ;
 
 -- -----------------------------------------------------
@@ -86,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `tcs`.`modelo` (
   `IdMarca` INT(11) NOT NULL,
   `Descricao` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`IdModelo`),
-  INDEX `fk_Modelo_Marca1_idx` (`IdMarca` ASC),
+  INDEX `fk_Modelo_Marca1_idx` (`IdMarca` ASC) ,
   CONSTRAINT `fk_Modelo_Marca1`
     FOREIGN KEY (`IdMarca`)
     REFERENCES `tcs`.`marca` (`IdMarca`)
@@ -105,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `tcs`.`veiculo` (
   `Placa` VARCHAR(45) NULL DEFAULT NULL,
   `Ano` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`IdVeiculo`),
-  INDEX `fk_Veiculo_Modelo1_idx` (`IdModelo` ASC),
+  INDEX `fk_Veiculo_Modelo1_idx` (`IdModelo` ASC) ,
   CONSTRAINT `fk_Veiculo_Modelo1`
     FOREIGN KEY (`IdModelo`)
     REFERENCES `tcs`.`modelo` (`IdModelo`)
@@ -130,8 +114,8 @@ CREATE TABLE IF NOT EXISTS `tcs`.`apolice` (
   `Franquia` DOUBLE NULL DEFAULT NULL,
   `DataContrato` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`IdApolice`),
-  INDEX `fk_Apolice_Cliente1_idx` (`IdCliente` ASC),
-  INDEX `fk_Apolice_Veiculo1_idx` (`IdVeiculo` ASC),
+  INDEX `fk_Apolice_Cliente1_idx` (`IdCliente` ASC) ,
+  INDEX `fk_Apolice_Veiculo1_idx` (`IdVeiculo` ASC) ,
   CONSTRAINT `fk_Apolice_Cliente1`
     FOREIGN KEY (`IdCliente`)
     REFERENCES `tcs`.`cliente` (`IdCliente`)
@@ -142,6 +126,17 @@ CREATE TABLE IF NOT EXISTS `tcs`.`apolice` (
     REFERENCES `tcs`.`veiculo` (`IdVeiculo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `tcs`.`usuario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tcs`.`usuario` (
+  `login` VARCHAR(45) NOT NULL,
+  `senha` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`login`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 

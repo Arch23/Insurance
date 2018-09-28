@@ -79,6 +79,9 @@ namespace Seguradora.Models
             if (retorno.Length != 0)
                 return retorno;
 
+            if (ValidarIdExistente())
+                return "Id de pessoa já utilizada\r\n";
+
             string cmdInserir = $"INSERT INTO pessoa(IdPessoa, Nome, Fone, Endereco, Bairro, Cep) " +
                 $"VALUES({IdPessoa}, '{nome}', '{fone}', '{endereco}', '{bairro}', '{cep}');";
 
@@ -91,6 +94,9 @@ namespace Seguradora.Models
 
             if (retorno.Length != 0)
                 return retorno;
+
+            if (!ValidarIdExistente())
+                return "Pessoa com este ID não existe.\r\n";
 
             string cmdAlterar = $"UPDATE pessoa SET Nome='{nome}', Fone='{fone}', Endereco='{endereco}', Bairro='{bairro}', Cep='{cep}'" +
                 $"WHERE IdPessoa={idPessoa};";
@@ -105,6 +111,9 @@ namespace Seguradora.Models
             if (retorno.Length != 0)
                 return retorno;
 
+            if (!ValidarIdExistente())
+                return "Pessoa com este ID não existe.\r\n";
+
             string cmdExcluir = $"DELETE FROM pessoa WHERE IdPessoa={idPessoa};";
 
             return ConexaoBD.GetInstance().ExecutarSql(cmdExcluir);
@@ -116,6 +125,9 @@ namespace Seguradora.Models
 
             if (retorno.Length != 0)
                 return retorno;
+
+            if (!ValidarIdExistente())
+                return "Pessoa com este ID não existe.\r\n";
 
             string cmdRecuperar = $"SELECT * FROM pessoa WHERE IdPessoa={idPessoa};";
 
@@ -134,15 +146,11 @@ namespace Seguradora.Models
                 cep = tabela.Rows[0]["Cep"].ToString();
                 retorno = "";
             }
-            else
-            {
-                retorno = "Nenhuma entrada encontrada.";
-            }
 
             return retorno;
         }
 
-        protected static List<Pessoa> Recuperar(string pCondicao)
+        public static List<Pessoa> Recuperar(string pCondicao)
         {
             List<Pessoa> lista = null;
 
@@ -167,24 +175,43 @@ namespace Seguradora.Models
         }
         #endregion
 
+        private bool ValidarIdExistente()
+        {
+            string retorno;
+            string cmdSelectId = $"SELECT idPessoa FROM pessoa WHERE idPessoa={IdPessoa}";
+            DataTable tabela = ConexaoBD.GetInstance().ExecutarQuery(cmdSelectId, out retorno);
+
+            return tabela.Rows.Count != 0;
+        }
+
         private string Validar()
         {
-            string retorno = Utils.ValidarId(IdPessoa, "Pessoa");
+            string retorno = Utils.ValidarId(IdPessoa, "pessoa");
 
             if (nome.Length == 0)
                 retorno += "Nome não pode ser vazio.\r\n";
+            if (nome.Length > 45)
+                retorno += "Nome maior que o limite de 45 caracteres.\r\n";
 
             if (fone.Length == 0)
                 retorno += "Telefone não pode ser vazio.\r\n";
+            if (fone.Length > 45)
+                retorno += "Telefone maior que o limite de 45 caracteres.\r\n";
 
             if (endereco.Length == 0)
                 retorno += "Endereço não pode ser vazio.\r\n";
+            if (endereco.Length > 45)
+                retorno += "Endereço maior que o limite de 45 caracteres.\r\n";
 
             if (bairro.Length == 0)
                 retorno += "Bairro não pode ser vazio.\r\n";
+            if (bairro.Length > 45)
+                retorno += "Bairro maior que o limite de 45 caracteres.\r\n";
 
             if (cep.Length == 0)
                 retorno += "Cep não pode ser vazio.\r\n";
+            if (cep.Length > 15)
+                retorno += "Cep maior que o limite de 15 caracteres.\r\n";
 
             return retorno;
         }

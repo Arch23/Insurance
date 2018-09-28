@@ -46,6 +46,9 @@ namespace Seguradora.Models
             if (retorno.Length != 0)
                 return retorno;
 
+            if (ValidarIdExistente())
+                return "Id de marca já utilizada\r\n";
+
             string cmdInserir = $"INSERT INTO marca(IdMarca, Descricao) VALUES({idMarca}, '{descricao}');";
             return ConexaoBD.GetInstance().ExecutarSql(cmdInserir);
         }
@@ -56,6 +59,9 @@ namespace Seguradora.Models
             if (retorno.Length != 0)
                 return retorno;
 
+            if (!ValidarIdExistente())
+                return "Marca com este ID não existe.\r\n";
+
             string cmdAlterar = $"UPDATE marca SET Descricao='{descricao}' WHERE IdMarca={idMarca};";
             return ConexaoBD.GetInstance().ExecutarSql(cmdAlterar);
         }
@@ -65,6 +71,9 @@ namespace Seguradora.Models
             string retorno = Utils.ValidarId(idMarca, "marca");
             if (retorno.Length != 0)
                 return retorno;
+            
+            if (!ValidarIdExistente())
+                return "Marca com este ID não existe.\r\n";
 
             string cmdExcluir = $"DELETE FROM marca WHERE IdMarca={idMarca};";
             return ConexaoBD.GetInstance().ExecutarSql(cmdExcluir);
@@ -75,6 +84,9 @@ namespace Seguradora.Models
             string retorno = Utils.ValidarId(idMarca, "marca");
             if (retorno.Length != 0)
                 return retorno;
+            
+            if (!ValidarIdExistente())
+                return "Marca com este ID não existe.\r\n";
 
             string cmdRecuperar = $"SELECT * FROM marca WHERE IdMarca={idMarca};";
             DataTable tabela = ConexaoBD.GetInstance().ExecutarQuery(cmdRecuperar, out retorno);
@@ -87,10 +99,6 @@ namespace Seguradora.Models
                 idMarca = Convert.ToInt32(tabela.Rows[0]["IdMarca"]);
                 descricao = tabela.Rows[0]["Descricao"].ToString();
                 retorno = "";
-            }
-            else
-            {
-                retorno = "Nenhuma marca encontrada. ";
             }
 
             return retorno;
@@ -121,16 +129,23 @@ namespace Seguradora.Models
         }
         #endregion
 
-        
+        private bool ValidarIdExistente()
+        {
+            string retorno;
+            string cmdSelectId = $"SELECT idMarca FROM marca WHERE idMarca={IdMarca}";
+            DataTable tabela = ConexaoBD.GetInstance().ExecutarQuery(cmdSelectId, out retorno);
+
+            return tabela.Rows.Count != 0;
+        }
 
         private string Validar()
         {
             string retorno = "";
             retorno += Utils.ValidarId(idMarca, "marca");
             if (descricao.Length == 0)
-            {
-                retorno += "descrição não pode ser vazia.\r\n";
-            }
+                retorno += "Descrição não pode ser vazia.\r\n";
+            if (descricao.Length > 45)
+                retorno += "Descrição maior que o limite de 45 caracteres.\r\n";
 
             return retorno;
         }
